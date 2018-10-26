@@ -1,19 +1,16 @@
-  // Grab the articles as a json
-   $.getJSON("/articles", function(data) {
-      // For each one
-      for (var i = 0; i < data.length; i++) {
-        // Display the apropos information on the page
-        $("#articles").append(
-          "<div class='card'><div class='card-body'><h5 class='card-title'>" + data[i].title + "</h5><p class='card-text'>" + data[i].teaser + "</p><a class='title-link' href='" + data[i].link +"'></a><hr><button class='btn btn-primary'</button></div></div>"
-        );
-}
-
-  console.log(data);
+// Grab the articles as a json
+$.getJSON("/articles", function(data) {
+  // For each one
+  for (var i = 0; i < data.length; i++) {
+    // Display the apropos information on the page
+    $("#articles").append(
+      "<div class='card'><div class='card-body'><a class='card-title' target='_blank' href='" + data[i].link +"'>" + data[i].title + "</a><p class='card-text'>" + data[i].teaser + "</p><button type='button' class='btn btn-primary show-modal' data-toggle='modal' data-target='#notesModal'>save article</button></div></div>"
+    );
+  }
 });
 
-
-// When you click the Fetch button
-$(document).on("click", ".btn-fetch", function() {
+// When you click the scrape button
+$("#scrapeBtn").click(function() {
   alert('Articles up-to-date!');
 
   $.ajax({
@@ -25,98 +22,108 @@ $(document).on("click", ".btn-fetch", function() {
     });
 });
 
-
-
-// When you click the Note button
-$(document).on("click", ".btn-note", function() {
-  
-  $(".modal-title").empty();
-  $(".input").empty();
-
-  // Save the id from .btn-note
-  var thisId = $(this).attr("data-id");
-  console.log(thisId);
-
-  $.ajax({
-    method: "GET",
-    url: "/articles/" + thisId
-  })
-    // With that done, add the note information to the page
-    .done(function(data) {
-      console.log(data);
-
-      $(".modal-title").append("<h5>" + data.title + "</h5>");
-      $(".input").append("<textarea id='bodyinput' name='body'></textarea>");
-      $(".input").append("<button data-id='" + data._id + "' id='savenote' class='btn btn-primary btn-sm' style='margin-top:20px;'data-dismiss='modal'>Save Note</button>");
-
-      // If there's a note in the article
-      if (data.note) {
-        // Place the body of the note in the body textarea
-        $("#bodyinput").val(data.note.body);
-      }
-    });
+// When you click the clear button
+$("#clearBtn").click(function() {
+  $("#articles").empty();
 });
 
 
 
-// When you click the Save Note button
-$(document).on("click", "#savenote", function() {
-  // Grab the id associated with the article from the submit button
-  var thisId = $(this).attr("data-id");
-  console.log(thisId);
+// $('#articles').on('click', (event)=>{
+//   event.preventDefault();
+//   $('#notesModal').addClass('show');
+// // $('#notesModal').modal();
 
-  // Run a POST request to change the note, using what's entered in the inputs
-  $.ajax({
-    method: "POST",
-    url: "/articles/" + thisId,
-    data: {
-      // Value taken from note textarea
-      body: $("#bodyinput").val()
-    }
-  })
+// // When you click the Note button
+// $(document).on("click", ".btn-note", function() {
   
-    .done(function(data) {
-      // Log the response
-      console.log(data);
-      // Empty the notes section
-      // $("#bodyinput").empty();
-    });
+//   $(".modal-title").empty();
+//   $(".input").empty();
 
-  // Remove the values entered in the input and textarea for note entry
-  $("#bodyinput").val("");
-});
+//   // Save the id from .btn-note
+//   var thisId = $(this).attr("data-id");
+//   console.log(thisId);
+
+//   $.ajax({
+//     method: "GET",
+//     url: "/articles/" + thisId
+//   })
+//     // With that done, add the note information to the page
+//     .done(function(data) {
+//       console.log(data);
+
+//       $(".modal-title").append("<h5>" + data.title + "</h5>");
+//       $(".input").append("<textarea id='bodyinput' name='body'></textarea>");
+//       $(".input").append("<button data-id='" + data._id + "' id='savenote' class='btn btn-primary btn-sm' style='margin-top:20px;'data-dismiss='modal'>Save Note</button>");
+
+//       // If there's a note in the article
+//       if (data.note) {
+//         // Place the body of the note in the body textarea
+//         $("#bodyinput").val(data.note.body);
+//       }
+//     });
+// });
 
 
 
-// When you click the Save Article button
-$(document).on("click", "#btn-save", function() {
-  $(this).addClass("disabled");
-  var thisId = $(this).attr("data-id");
-  console.log(thisId);
+// // When you click the Save Note button
+// $(document).on("click", "#savenote", function() {
+//   // Grab the id associated with the article from the submit button
+//   var thisId = $(this).attr("data-id");
+//   console.log(thisId);
 
-  $.ajax({
-    method: "PUT",
-    url: "/saved/" + thisId,
+//   // Run a POST request to change the note, using what's entered in the inputs
+//   $.ajax({
+//     method: "POST",
+//     url: "/articles/" + thisId,
+//     data: {
+//       // Value taken from note textarea
+//       body: $("#bodyinput").val()
+//     }
+//   })
+  
+//     .done(function(data) {
+//       // Log the response
+//       console.log(data);
+//       // Empty the notes section
+//       // $("#bodyinput").empty();
+//     });
+
+//   // Remove the values entered in the input and textarea for note entry
+//   $("#bodyinput").val("");
+// });
+
+
+
+// // When you click the Save Article button
+// $(document).on("click", "#btn-save", function() {
+//   $(this).addClass("disabled");
+//   var thisId = $(this).attr("data-id");
+//   console.log(thisId);
+
+//   $.ajax({
+//     method: "PUT",
+//     url: "/saved/" + thisId,
    
-  })
+//   })
   
-  .done(function(data) {
-      console.log(data);
-  });
-});
+//   .done(function(data) {
+//       console.log(data);
+//   });
+// });
 
-  // When scrape button is clicked
-  $(document).on("click", "#scrapeBtn", function() {
-    alert('Articles up-to-date!');
+//   // When scrape button is clicked
+//   $(document).on("click", "#scrapeBtn", function() {
+//     alert('Articles up-to-date!');
 
-    $.ajax({
-      method: "GET",
-      url: "/scrape"
-    })
-      .done(function(data) {
-        location.reload();
-      });
-  });
+//     $.ajax({
+//       method: "GET",
+//       url: "/scrape"
+//     })
+//       .done(function(data) {
+//         location.reload();
+//       });
+//   });
 
 
   // // Whenever someone clicks a p tag
