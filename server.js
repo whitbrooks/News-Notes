@@ -45,16 +45,16 @@ mongoose.connect("mongodb://localhost/newsNotes", { useNewUrlParser: true });
         result.link = $(this).children("a").attr("href");
         result.teaser = $(this).siblings(".teaser").text();
 
-         // Create a new Article using the `result` object built from scraping
-         db.Article.create(result)
-         .then(function(dbArticle) {
-          console.log(dbArticle);
-         })
-         .catch(function(err) {
-           // If an error occurred, send it to the client
-           return res.json(err);
-         });
-     });
+        // Create a new Article using the `result` object built from scraping
+        db.Article.create(result)
+            .then(function(dbArticle) {
+            console.log(dbArticle);
+            })
+            .catch(function(err) {
+              // If an error occurred, send it to the client
+              return res.json(err);
+        });
+      });
       
       // If we were able to successfully scrape and save an Article, send a message to the client 
       res.send("Scrape Complete");
