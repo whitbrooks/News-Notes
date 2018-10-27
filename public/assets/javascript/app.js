@@ -1,10 +1,10 @@
 // Grab the articles as a json
-$.getJSON("/articles", function(data) {
+$.get("/articles", function(data) {
   // For each one
   for (var i = 0; i < data.length; i++) {
     // Display the apropos information on the page
     $("#articles").append(
-      "<div class='card'><div class='card-body'><a class='card-title' target='_blank' href='" + data[i].link +"'>" + data[i].title + "</a><p class='card-text'>" + data[i].teaser + "</p><button type='button' class='btn btn-primary show-modal' data-toggle='modal' data-target='#notesModal'>save article</button></div></div>"
+      "<div class='card'><div class='card-body'><a class='card-title' target='_blank' href='" + data[i].link +"'>" + data[i].title + "</a><p class='card-text'>" + data[i].teaser + "</p><button data-id='" + data[i]._id + "' class='noteBtn btn btn-outline-primary btn-sm' data-toggle='modal' data-target='#notesModal' style='margin-right:10px;'>Add Note</button><button id='saveBtn' data-id='" + data[i]._id + "' class='btn btn-outline-primary btn-sm'>Save Article</button></div></div>"
     );
   }
 });
@@ -28,19 +28,71 @@ $("#clearBtn").click(function() {
 });
 
 
-
-// $('#articles').on('click', (event)=>{
-//   event.preventDefault();
-//   $('#notesModal').addClass('show');
-// // $('#notesModal').modal();
-
-// // When you click the Note button
-// $(document).on("click", ".btn-note", function() {
+// When you click the Note button
+$(document).on("click", ".noteBtn", function() {
   
-//   $(".modal-title").empty();
-//   $(".input").empty();
+  // $(".modal-title").empty();
+  // $(".input").empty();
 
-//   // Save the id from .btn-note
+  // Save the id from .btn-note
+  var thisId = $(this).attr("data-id");
+  console.log(thisId);
+
+  $.ajax({
+    method: "GET",
+    url: "/articles/" + thisId
+  })
+    // With that done, add the note information to the page
+    .done(function(data) {
+      console.log(data);
+
+      $(".modal-title").append("<h5>" + data.title + "</h5>");
+      // $("#input").append("<textarea id='bodyinput' name='body'></textarea>");
+      // $("#input").append("<button data-id='" + data._id + "' id='savenote' class='btn btn-primary btn-sm' style='margin-top:20px;'data-dismiss='modal'>Save Note</button>");
+
+      // If there's a note in the article
+      if (data.note) {
+        // Place the body of the note in the body textarea
+        $("#bodyinput").prepend(data.note.body);
+      }
+    });
+});
+
+
+
+// $('.saveArticle').on('click', (event)=>{
+//   event.preventDefault();
+//   // Save the id 
+//   var thisId = $(this).attr("data-id");
+//   console.log(thisId);
+
+//   $.ajax({
+//     method: "GET",
+//     url: "/articles/" + thisId
+//   })
+//     // With that done, add the note information to the page
+//     .done(function(data) {
+//       console.log(data);
+
+//       $(".modal-title").append("<h5>" + data.title + "</h5>");
+//       $(".input").append("<textarea id='bodyinput' name='body'></textarea>");
+//       $(".input").append("<button data-id='" + data._id + "' id='savenote' class='btn btn-primary btn-sm' style='margin-top:20px;'data-dismiss='modal'>Save Note</button>");
+
+//       // If there's a note in the article
+//       if (data.note) {
+//         // Place the body of the note in the body textarea
+//         $("#bodyinput").val(data.note.body);
+//       }
+//     });
+// });
+  
+
+
+
+// // When you click the save save button
+// $("#saveNoteBtn").click(function() {
+
+//   // Save the id 
 //   var thisId = $(this).attr("data-id");
 //   console.log(thisId);
 
@@ -112,18 +164,6 @@ $("#clearBtn").click(function() {
 //   });
 // });
 
-//   // When scrape button is clicked
-//   $(document).on("click", "#scrapeBtn", function() {
-//     alert('Articles up-to-date!');
-
-//     $.ajax({
-//       method: "GET",
-//       url: "/scrape"
-//     })
-//       .done(function(data) {
-//         location.reload();
-//       });
-//   });
 
 
   // // Whenever someone clicks a p tag
