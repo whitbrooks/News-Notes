@@ -28,13 +28,15 @@ $("#clearBtn").click(function() {
 });
 
 
-// When you click the Note button
+// When you click the add note button
 $(document).on("click", ".noteBtn", function() {
   
-  // $(".modal-title").empty();
-  // $(".input").empty();
+  $(".modal-title").empty();
+  $(".modal-body").empty();
+  $(".modal-footer").empty();
 
-  // Save the id from .btn-note
+
+  // get id from noteBtn
   var thisId = $(this).attr("data-id");
   console.log(thisId);
 
@@ -47,44 +49,46 @@ $(document).on("click", ".noteBtn", function() {
       console.log(data);
 
       $(".modal-title").append("<h5>" + data.title + "</h5>");
-      // $("#input").append("<textarea id='bodyinput' name='body'></textarea>");
-      // $("#input").append("<button data-id='" + data._id + "' id='savenote' class='btn btn-primary btn-sm' style='margin-top:20px;'data-dismiss='modal'>Save Note</button>");
+      $(".modal-body").append("<textarea id='input' rows='4' cols='50'></textarea>");
+      $(".modal-footer").append("<button data-id='" + data._id + "' id='saveChanges' type='button' class='btn btn-primary'>Save Changes</button>");
+
 
       // If there's a note in the article
       if (data.note) {
         // Place the body of the note in the body textarea
-        $("#bodyinput").prepend(data.note.body);
+        $(".modal-body").prepend(data.note);
       }
     });
 });
 
 
 
-// $('.saveArticle').on('click', (event)=>{
-//   event.preventDefault();
-//   // Save the id 
-//   var thisId = $(this).attr("data-id");
-//   console.log(thisId);
+// When you click the save changes button in notes modal
+$(document).on("click", "#saveChanges", function() {
+  // Grab the id associated with the article from the submit button
+  var thisId = $(this).attr("data-id");
+  console.log(thisId);
 
-//   $.ajax({
-//     method: "GET",
-//     url: "/articles/" + thisId
-//   })
-//     // With that done, add the note information to the page
-//     .done(function(data) {
-//       console.log(data);
+  // Run a POST request to change the note, using what's entered in the inputs
+  $.ajax({
+    method: "POST",
+    url: "/articles/" + thisId,
+    data: {
+      // Value taken from note textarea
+      body: $("#input").val()
+    }
+  })
+  
+    .done(function(data) {
+      // Log the response
+      console.log(data);
+ 
+    });
 
-//       $(".modal-title").append("<h5>" + data.title + "</h5>");
-//       $(".input").append("<textarea id='bodyinput' name='body'></textarea>");
-//       $(".input").append("<button data-id='" + data._id + "' id='savenote' class='btn btn-primary btn-sm' style='margin-top:20px;'data-dismiss='modal'>Save Note</button>");
+  // Remove the values entered in the input and textarea for note entry
+  $("#input").val("");
+});
 
-//       // If there's a note in the article
-//       if (data.note) {
-//         // Place the body of the note in the body textarea
-//         $("#bodyinput").val(data.note.body);
-//       }
-//     });
-// });
   
 
 
