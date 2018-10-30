@@ -60,7 +60,6 @@ mongoose.connect("mongodb://localhost/newsNotes", { useNewUrlParser: true });
       res.send("Scrape Complete");
       });
     });
- 
 
 
 // Route for getting all Articles from the db
@@ -101,7 +100,7 @@ app.post("/articles/:id", function(req, res) {
       // If a Note was created successfully, find one Article with an `_id` equal to `req.params.id`. Update the Article to be associated with the new Note
       // { new: true } tells the query that we want it to return the updated User -- it returns the original by default
       // Since our mongoose query returns a promise, we can chain another `.then` which receives the result of the query
-      return db.Article.findOneAndUpdate({ _id: req.params.id }, { note: dbNote._id }, { new: true });
+      return db.Article.findOneAndUpdate({ _id: req.params.id }, {note: dbNote._id, saved:true},{ new: true });
     })
     .then(function(dbArticle) {
       // If we were able to successfully update an Article, send it back to the client
@@ -112,6 +111,37 @@ app.post("/articles/:id", function(req, res) {
       res.json(err);
     });
 });
+
+// Route for updating an article as "saved"
+app.post("/save/:id", function(req, res) {
+
+  db.Article.findOneAndUpdate({ _id: req.params.id }, {saved: true},{ new: true })
+    .then(function(dbArticle) {
+      // If we were able to successfully update an Article, send it back to the client
+      res.json(dbArticle);
+    })
+    .catch(function(err) {
+      // If an error occurred, send it to the client
+      res.json(err);
+    });
+  });
+
+
+// Route for deleting unsaved articles
+app.post("/delete", function(req, res) {
+
+  db.Article.deleteMany({saved: false})
+    .then(function(dbArticle) {
+      // If we were able to successfully update an Article, send it back to the client
+      res.json(dbArticle);
+    })
+    .catch(function(err) {
+      // If an error occurred, send it to the client
+      res.json(err);
+    });
+  });
+
+
 
 // Start the server
 app.listen(PORT, function() {
