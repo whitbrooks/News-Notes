@@ -2,7 +2,7 @@
 $.get("/articles", function(data) {
   // For each one
   for (var i = 0; i < data.length; i++) {
-    // Display the apropos information on the page
+    // Display information on the page
     $("#articles").append(
       "<div class='card''><div class='card-body'><a class='card-title' target='_blank' href='" + data[i].link +"'>" + data[i].title + "</a><p class='card-text'>" + data[i].teaser + "</p><button data-id='" + data[i]._id + "' class='noteBtn btn btn-outline-primary btn-sm' data-toggle='modal' data-target='#notesModal' style='margin-right:10px;'>Add Note</button><button id='saveBtn' data-id='" + data[i]._id + "' class='btn btn-outline-primary btn-sm'>Save Article</button></div></div>"
     );
@@ -33,9 +33,7 @@ $("#clearBtn").click(function() {
     .done(function(data) {
       // Log the response
       console.log(data);
- 
     });
-  
 });
 
 
@@ -118,3 +116,17 @@ $(document).on("click", "#saveBtn", function() {
   
     });
   });
+
+// when you click "my saved articles" on the homepage
+$(document).on("click", "#savedPage", function() {
+
+  $.get("/saved", function(data) {
+    // For each one
+    for (var i = 0; i < data.length; i++) {
+      // Display information on the page
+      $("#articles").append(
+        "<div class='card''><div class='card-body'><a class='card-title' target='_blank' href='" + data[i].link +"'>" + data[i].title + "</a><p class='card-text'>" + data[i].teaser + "</p><button data-id='" + data[i]._id + "' class='noteBtn btn btn-outline-primary btn-sm' data-toggle='modal' data-target='#notesModal' style='margin-right:10px;'>Add Note</button><button id='saveBtn' data-id='" + data[i]._id + "' class='btn btn-outline-primary btn-sm'>Save Article</button></div></div>"
+      );
+    }
+  });
+});
