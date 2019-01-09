@@ -122,6 +122,8 @@ $(document).on("click", "#saveBtn", function() {
 // when you click "my saved articles" on the homepage
 $(document).on("click", "#savedPage", function() {
 
+  $("#articles").empty();
+  
   $.get("/saved", function(data) {
     // For each one
     for (var i = 0; i < data.length; i++) {
