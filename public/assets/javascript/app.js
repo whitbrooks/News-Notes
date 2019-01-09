@@ -23,8 +23,7 @@ $("#scrapeBtn").click(function() {
 
 // When you click the clear button
 $("#clearBtn").click(function() {
-  $("#articles").empty();
-
+  
   $.ajax({
     method: "POST",
     url: "/delete"
@@ -34,6 +33,9 @@ $("#clearBtn").click(function() {
       // Log the response
       console.log(data);
     });
+  
+  $("#articles").empty();
+  
 });
 
 
@@ -59,7 +61,7 @@ $(document).on("click", ".noteBtn", function() {
 
       $(".modal-title").append("<h5>" + data.title + "</h5>");
       $(".modal-body").append("<textarea id='input' rows='4' cols='57'></textarea>");
-      $(".modal-footer").append("<button data-id='" + data._id + "' id='saveChanges' type='button' class='btn btn-primary'>Save Changes</button>");
+      $(".modal-footer").append("<button data-id='" + data._id + "' id='saveChanges' type='button' class= 'btn btn primary' class='close' data-dismiss='modal' aria-label='Close'>Save Changes</button>");
 
 
       // If there's a note in the article

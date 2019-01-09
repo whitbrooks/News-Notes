@@ -1,8 +1,8 @@
 # My News Notes
 
-"My News Notes" scrapes the NPR News website for articles, displays them to the user, then allows the user to save and annotate those articles.
+My News Notes scrapes the NPR News website for articles, displays them to the user, then allows the user to save and annotate those articles.
 
-## Technologies/libraries used:
+## Technologies & libraries used:
 * Express.js
 * Axios
 * Cheerio
